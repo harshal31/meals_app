@@ -1,20 +1,14 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-final kColorScheme = ColorScheme.fromSwatch(
+final kColorScheme = ColorScheme.fromSeed(
   brightness: Brightness.light,
-  primarySwatch: getMaterialColor(
-    const Color.fromARGB(255, 131, 57, 0),
-  ),
+  seedColor: const Color.fromARGB(255, 131, 57, 0),
 );
 
-final kDarkColorScheme = ColorScheme.fromSwatch(
+final kDarkColorScheme = ColorScheme.fromSeed(
   brightness: Brightness.dark,
-  primarySwatch: getMaterialColor(
-    const Color.fromARGB(255, 5, 99, 125),
-  ),
+  seedColor: const Color.fromARGB(255, 5, 99, 125),
 );
 
 MaterialColor getMaterialColor(Color color) {
@@ -58,28 +52,27 @@ ThemeData darkTheme() => ThemeData.dark().copyWith(
       textTheme: GoogleFonts.jetBrainsMonoTextTheme(
         ThemeData.dark().copyWith(brightness: Brightness.dark).textTheme,
       ),
-      snackBarTheme: const SnackBarThemeData().copyWith(
-        backgroundColor: kDarkColorScheme.background,
-        actionTextColor: kDarkColorScheme.onPrimaryContainer,
-        actionBackgroundColor: kColorScheme.primaryContainer.withOpacity(0.4),
-      ),
       datePickerTheme: const DatePickerThemeData().copyWith(),
     );
 
-ThemeData lightTheme() => ThemeData().copyWith(
-      brightness: Brightness.light,
-      useMaterial3: true,
-      colorScheme: kColorScheme,
-      appBarTheme: const AppBarTheme().copyWith(
-        backgroundColor: kColorScheme.primaryContainer,
-        foregroundColor: kColorScheme.onPrimaryContainer,
-      ),
-      cardTheme: const CardTheme().copyWith(
-        margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 14.0),
-        elevation: 6.0,
-      ),
-      textTheme: GoogleFonts.jetBrainsMonoTextTheme(),
-    );
+ThemeData lightTheme() => ThemeData.light().copyWith(
+    brightness: Brightness.light,
+    useMaterial3: true,
+    colorScheme: kColorScheme,
+    appBarTheme: const AppBarTheme().copyWith(
+      backgroundColor: kColorScheme.primaryContainer,
+      foregroundColor: kColorScheme.onPrimaryContainer,
+    ),
+    cardTheme: const CardTheme().copyWith(
+      margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 14.0),
+      elevation: 6.0,
+    ),
+    textTheme: GoogleFonts.jetBrainsMonoTextTheme(
+      ThemeData.light(useMaterial3: true)
+          .copyWith(brightness: Brightness.light)
+          .textTheme,
+    )
+);
 
 extension BuildContextExtension on BuildContext {
   TextTheme textTheme() {
