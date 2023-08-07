@@ -18,25 +18,36 @@ class MealDetailScreen extends ConsumerWidget {
     ));
   }
 
+  ///Implicit Animation example is present here as AnimatedSwitcher
+  ///These are some available ImplicitAnimation widget https://docs.flutter.dev/ui/widgets/animation
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final favorites = ref.watch(favoriteMealProvider);
+    final isFavorite = favorites.contains(meal);
     return Scaffold(
       appBar: AppBar(
         title: Text(meal.title),
         actions: [
           IconButton(
             onPressed: () {
-              final wasRemoved = ref
-                  .read(favoriteMealProvider.notifier)
-                  .toggleMealAsFavorite(meal);
+              final wasRemoved =
+                  ref.read(favoriteMealProvider.notifier).toggleMealAsFavorite(meal);
               _showSnackBar(
                 "Meal ${wasRemoved ? "removed" : "added"} as favorite",
                 context,
               );
             },
-            icon: Icon(
-                favorites.contains(meal) ? Icons.star : Icons.star_outline),
+            icon: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 500),
+              child: Icon(
+                isFavorite ? Icons.star : Icons.star_outline,
+                key: ValueKey(isFavorite),
+              ),
+              transitionBuilder: (child, animation) => RotationTransition(
+                turns: Tween<double>(begin: 0.7, end: 1).animate(animation),
+                child: child,
+              ),
+            ),
           )
         ],
       ),
