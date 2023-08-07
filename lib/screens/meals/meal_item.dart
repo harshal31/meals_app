@@ -31,27 +31,28 @@ class MealItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         child: Stack(
           children: [
-            FadeInImage(
-              fit: BoxFit.cover,
-              placeholder: MemoryImage(kTransparentImage),
-              image: NetworkImage(meal.imageUrl),
-              width: double.infinity,
-              height: 200,
+            Hero(
+              tag: meal.id,
+              child: FadeInImage(
+                fit: BoxFit.cover,
+                placeholder: MemoryImage(kTransparentImage),
+                image: NetworkImage(meal.imageUrl),
+                width: double.infinity,
+                height: 200,
+              ),
             ),
             Positioned(
               bottom: 0,
               left: 0,
               right: 0,
               child: Container(
-                padding:
-                const EdgeInsets.symmetric(vertical: 6, horizontal: 44),
+                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 44),
                 color: Colors.black54,
                 child: Column(
                   children: [
                     Text(
                       meal.title,
-                      style: Theme
-                          .of(context)
+                      style: Theme.of(context)
                           .textTheme
                           .titleMedium
                           ?.copyWith(color: Colors.white),
