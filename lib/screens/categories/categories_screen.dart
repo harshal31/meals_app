@@ -7,12 +7,9 @@ import '../../data/meal.dart';
 import '../meal_details/meal_detail_screen.dart';
 
 class CategoriesScreen extends StatelessWidget {
-
   final List<Meal> availableMeals;
-  final List<Meal> favorites;
 
-  const CategoriesScreen(
-      {super.key, required this.favorites, required this.availableMeals});
+  const CategoriesScreen({super.key, required this.availableMeals});
 
   void _onSelectCategory(BuildContext context, Category category) {
     var meals = availableMeals
@@ -24,7 +21,6 @@ class CategoriesScreen extends StatelessWidget {
         MaterialPageRoute(
           builder: (ctx) => MealDetailScreen(
             meal: meals.first,
-            favorites: favorites,
           ),
         ),
       );
@@ -32,11 +28,7 @@ class CategoriesScreen extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (ctx) => MealsScreen(
-            meals: meals,
-            title: category.title,
-            favorites: favorites,
-          ),
+          builder: (ctx) => MealsScreen(meals: meals, title: category.title),
         ),
       );
     }

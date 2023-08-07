@@ -7,7 +7,7 @@ class FavoriteMealsNotifier extends StateNotifier<List<Meal>> {
   FavoriteMealsNotifier(super.state);
 
   bool toggleMealAsFavorite(Meal meal) {
-    bool isFavorite = _stateList.contains(meal);
+    bool isFavorite = state.contains(meal);
     bool wadRemoved = false;
     if (isFavorite) {
       _stateList.remove(meal);
@@ -16,11 +16,11 @@ class FavoriteMealsNotifier extends StateNotifier<List<Meal>> {
       _stateList.add(meal);
       wadRemoved = false;
     }
-    state = _stateList;
+    state = [..._stateList];
     return wadRemoved;
   }
 }
 
 final favoriteMealProvider =
-StateNotifierProvider<FavoriteMealsNotifier, List<Meal>>(
+    StateNotifierProvider<FavoriteMealsNotifier, List<Meal>>(
         (ref) => FavoriteMealsNotifier([]));

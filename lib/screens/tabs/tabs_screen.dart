@@ -30,14 +30,12 @@ class TabScreen extends ConsumerWidget {
     final selectedIndex = ref.watch(tabProvider);
 
     Widget selectedPage = CategoriesScreen(
-      favorites: ref.watch(favoriteMealProvider),
       availableMeals: filteredMeals,
     );
 
     if (selectedIndex == 1) {
       selectedPage = MealsScreen(
         meals: ref.watch(favoriteMealProvider),
-        favorites: ref.watch(favoriteMealProvider),
       );
     }
 

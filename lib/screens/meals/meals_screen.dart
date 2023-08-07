@@ -6,14 +6,12 @@ import 'package:meals_app/theme/theme.dart';
 
 class MealsScreen extends StatelessWidget {
   final List<Meal> meals;
-  final List<Meal> favorites;
   String? title;
 
   MealsScreen({
     super.key,
     required this.meals,
-    this.title,
-    required this.favorites,
+    this.title
   });
 
   void _onMealSelection(BuildContext context, Meal meal) {
@@ -22,7 +20,6 @@ class MealsScreen extends StatelessWidget {
       MaterialPageRoute(
         builder: (ctx) => MealDetailScreen(
           meal: meal,
-          favorites: favorites,
         ),
       ),
     );
