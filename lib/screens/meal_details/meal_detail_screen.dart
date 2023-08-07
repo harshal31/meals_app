@@ -5,13 +5,12 @@ import 'package:meals_app/screens/meal_details/stateful_icon_button.dart';
 class MealDetailScreen extends StatelessWidget {
   final Meal meal;
   final List<Meal> favorites;
-  final void Function(Meal) onFavoriteMeal;
 
-  const MealDetailScreen(
-      {super.key,
-      required this.meal,
-      required this.favorites,
-      required this.onFavoriteMeal});
+  const MealDetailScreen({
+    super.key,
+    required this.meal,
+    required this.favorites,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +19,9 @@ class MealDetailScreen extends StatelessWidget {
         title: Text(meal.title),
         actions: [
           StatefulIconButton(
-              favorites: favorites,
-              selectedMeal: meal,
-              onFavoriteMeal: onFavoriteMeal)
+            favorites: favorites,
+            selectedMeal: meal,
+          )
         ],
       ),
       body: SingleChildScrollView(

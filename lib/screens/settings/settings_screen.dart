@@ -1,103 +1,87 @@
 import 'package:flutter/material.dart';
-import 'package:meals_app/models/Category.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app/theme/theme.dart';
 
-class SettingsScreen extends StatefulWidget {
-  final SettingsState settingState;
+import '../../providers/filter/fillters_provider.dart';
 
-  const SettingsScreen({super.key, required this.settingState});
-
-  @override
-  State<SettingsScreen> createState() => _SettingScreenState();
-}
-
-class _SettingScreenState extends State<SettingsScreen> {
-  void _onSwitchTileSelect(int index, bool state) {
-    setState(() {
-      if (index == 0) {
-        widget.settingState.isGlutenFree = state;
-      } else if (index == 1) {
-        widget.settingState.isLactoseFree = state;
-      } else if (index == 2) {
-        widget.settingState.isVegatarianFree = state;
-      } else {
-        widget.settingState.isVeganFree = state;
-      }
-    });
-  }
+class SettingsScreen extends ConsumerWidget {
+  const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.of(context).pop(true);
-        return false;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Settings"),
-        ),
-        body: Column(
-          children: [
-            SwitchListTile(
-              title: Text(
-                "Gluten",
-                style: context.textTheme().titleMedium,
-              ),
-              subtitle: Text(
-                "Only include Gluten free meal!",
-                style: context.textTheme().titleSmall,
-              ),
-              value: widget.settingState.isGlutenFree,
-              onChanged: (value) => _onSwitchTileSelect(0, value),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settingsState = ref.watch(filtersProvider);
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Settings"),
+      ),
+      body: Column(
+        children: [
+          SwitchListTile(
+            title: Text(
+              "Gluten",
+              style: context.textTheme().titleMedium,
             ),
-            const SizedBox(
-              height: 16,
+            subtitle: Text(
+              "Only include Gluten free meal!",
+              style: context.textTheme().titleSmall,
             ),
-            SwitchListTile(
-              title: Text(
-                "Lactose",
-                style: context.textTheme().titleMedium,
-              ),
-              subtitle: Text(
-                "Only include Lactose free meal!",
-                style: context.textTheme().titleSmall,
-              ),
-              value: widget.settingState.isLactoseFree,
-              onChanged: (value) => _onSwitchTileSelect(1, value),
+            value: settingsState.isGlutenFree,
+            onChanged: (value) => ref
+                .read(filtersProvider.notifier)
+                .updateSettingState(isGlutenFree: value),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          SwitchListTile(
+            title: Text(
+              "Lactose",
+              style: context.textTheme().titleMedium,
             ),
-            const SizedBox(
-              height: 16,
+            subtitle: Text(
+              "Only include Lactose free meal!",
+              style: context.textTheme().titleSmall,
             ),
-            SwitchListTile(
-              title: Text(
-                "Vegetarian",
-                style: context.textTheme().titleMedium,
-              ),
-              subtitle: Text(
-                "Only include Vegetarian meal!",
-                style: context.textTheme().titleSmall,
-              ),
-              value: widget.settingState.isVegatarianFree,
-              onChanged: (value) => _onSwitchTileSelect(2, value),
+            value: settingsState.isLactoseFree,
+            onChanged: (value) => ref
+                .read(filtersProvider.notifier)
+                .updateSettingState(isLactoseFree: value),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          SwitchListTile(
+            title: Text(
+              "Vegetarian",
+              style: context.textTheme().titleMedium,
             ),
-            const SizedBox(
-              height: 16,
+            subtitle: Text(
+              "Only include Vegetarian meal!",
+              style: context.textTheme().titleSmall,
             ),
-            SwitchListTile(
-              title: Text(
-                "Vegan",
-                style: context.textTheme().titleMedium,
-              ),
-              subtitle: Text(
-                "Only include Vegan meal!",
-                style: context.textTheme().titleSmall,
-              ),
-              value: widget.settingState.isVeganFree,
-              onChanged: (value) => _onSwitchTileSelect(3, value),
-            )
-          ],
-        ),
+            value: settingsState.isVegatarianFree,
+            onChanged: (value) => ref
+                .read(filtersProvider.notifier)
+                .updateSettingState(isVegatarianFree: value),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          SwitchListTile(
+            title: Text(
+              "Vegan",
+              style: context.textTheme().titleMedium,
+            ),
+            subtitle: Text(
+              "Only include Vegan meal!",
+              style: context.textTheme().titleSmall,
+            ),
+            value: settingsState.isVeganFree,
+            onChanged: (value) => ref
+                .read(filtersProvider.notifier)
+                .updateSettingState(isVeganFree: value),
+          )
+        ],
       ),
     );
   }

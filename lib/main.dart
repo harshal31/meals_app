@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app/screens/tabs/tabs_screen.dart';
 import 'package:meals_app/theme/theme.dart';
 
 void main() {
   runApp(
     const SafeArea(
-      child: MyApp(),
+      child: ProviderScope(
+        child: MyApp(),
+      ),
     ),
   );
 }
@@ -21,8 +24,7 @@ class MyApp extends StatelessWidget {
       title: 'Meals App',
       theme: lightTheme(),
       darkTheme: darkTheme(),
-      home: const TabScreen(),
+      home: TabScreen(),
     );
   }
 }
-// MealsScreen(category: Category(id: "c2", title: "")

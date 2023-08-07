@@ -1,122 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:meals_app/data/dummy_data.dart';
-import 'package:meals_app/models/Category.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:meals_app/providers/favorite/favorite_provider.dart';
+import 'package:meals_app/providers/filter/fillters_provider.dart';
+import 'package:meals_app/providers/tab/tab_provider.dart';
 import 'package:meals_app/screens/categories/categories_screen.dart';
 import 'package:meals_app/screens/meals/meals_screen.dart';
 import 'package:meals_app/screens/settings/settings_screen.dart';
 import 'package:meals_app/screens/tabs/drawer_screen.dart';
-import '../../data/meal.dart';
 
-class TabScreen extends StatefulWidget {
-  const TabScreen({super.key});
+class TabScreen extends ConsumerWidget {
+  TabScreen({super.key});
 
-  @override
-  State<TabScreen> createState() => _TabScreenState();
-}
-
-class _TabScreenState extends State<TabScreen> {
-  int _selectedIndex = 0;
   final List<String> titles = ["Categories", "Favorites"];
-  final List<Meal> favorites = [];
-  final SettingsState _settingState = SettingsState();
-  final List<Meal> _availableMeals = [];
 
-  @override
-  void initState() {
-    super.initState();
-    _availableMeals.addAll(dummyMeals);
-  }
-
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(
-        message,
-        style: Theme.of(context).textTheme.labelLarge,
-      ),
-    ));
-  }
-
-  void _onDrawerSelect(int index) async {
+  void _onDrawerSelect(int index, BuildContext context) {
     Navigator.pop(context);
     if (index == 1) {
-      var result = await Navigator.of(context).push<bool>(
+      Navigator.of(context).push<bool>(
         MaterialPageRoute(
-          builder: (ctx) => SettingsScreen(
-            settingState: _settingState,
-          ),
+          builder: (ctx) => const SettingsScreen(),
         ),
       );
-      if (result ?? false) {
-        _callAvailableMeals();
-      }
     }
   }
 
-  void _onSelectFavoriteMeal(Meal meal) {
-    setState(() {
-      bool isExisted = favorites.contains(meal);
-      if (isExisted) {
-        _showSnackBar("${meal.title} is no longer favorite!");
-        favorites.remove(meal);
-      } else {
-        _showSnackBar("${meal.title} is Added as a favorite!");
-        favorites.add(meal);
-      }
-    });
-  }
-
-  void _onSelectPage(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  void _callAvailableMeals() {
-    setState(() {
-      _availableMeals.clear();
-      _availableMeals.addAll(dummyMeals.where((element) {
-        if (_settingState.isGlutenFree && !element.isGlutenFree) {
-          return false;
-        }
-        if (_settingState.isLactoseFree && !element.isLactoseFree) {
-          return false;
-        }
-        if (_settingState.isVegatarianFree && !element.isVegetarian) {
-          return false;
-        }
-        if (_settingState.isVeganFree && !element.isVegan) {
-          return false;
-        }
-        return true;
-      }));
-    });
-  }
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final filteredMeals = ref.watch(filterMealProvider);
+    final selectedIndex = ref.watch(tabProvider);
+
     Widget selectedPage = CategoriesScreen(
-      favorites: favorites,
-      onFavoriteMeal: _onSelectFavoriteMeal,
-      availableMeals: _availableMeals,
+      favorites: ref.watch(favoriteMealProvider),
+      availableMeals: filteredMeals,
     );
-    if (_selectedIndex == 1) {
+
+    if (selectedIndex == 1) {
       selectedPage = MealsScreen(
-        meals: favorites,
-        favorites: favorites,
-        onFavoriteMeal: _onSelectFavoriteMeal,
+        meals: ref.watch(favoriteMealProvider),
+        favorites: ref.watch(favoriteMealProvider),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(titles[_selectedIndex]),
+        title: Text(titles[selectedIndex]),
       ),
-      drawer: DrawerScreen(onDrawerSelect: _onDrawerSelect),
+      drawer: DrawerScreen(
+          onDrawerSelect: (index) => _onDrawerSelect(index, context)),
       body: selectedPage,
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onSelectPage,
+        currentIndex: selectedIndex,
+        onTap: (index) => ref.read(tabProvider.notifier).updateTabIndex(index),
         items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.set_meal), label: "Categories"),
